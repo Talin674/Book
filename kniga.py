@@ -112,7 +112,6 @@ textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
 print(steps)
-print("SDDSD")
 while True:
     print('Чтобы открыть инвентарь - напишите "инвентарь". Если хотите выпить из фляги - напишите "фляга"')
     print('Чтобы посмотреть статистику вашего персонажа введите - "статистика"')
