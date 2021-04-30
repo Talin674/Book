@@ -135,7 +135,7 @@ while True:
             print('У вас закончилось попытки')
     elif num == "статистика":
         print(a.__str__())
-    elif num.isdigit():
+    elif num.isdigit() and num in steps:
         number = int(num)
         textGL = poisk(number)
         steps = next_steps(textGL)
