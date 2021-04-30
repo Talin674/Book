@@ -39,8 +39,8 @@ class Player(object):
         return statistic.items()
 
 
-f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
-# f = "Braslavskiy_Podzemelya-Chernogo-zamka.lU7lVg.178246.txt"
+# f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
+f = "Braslavskiy_Podzemelya-Chernogo-zamka.lU7lVg.178246.txt"
 q = open(f, 'r', encoding='utf-8')
 for s in range(70):
     print(q.readline())
