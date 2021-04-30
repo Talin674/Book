@@ -20,9 +20,12 @@ class Bag(object):
             ret = ret + str(index_item) + "\t" + i
             index_item += 1
         return ret
+
 class Fight(object):
-    def __init__(self, player, enamy):
-        #посмотреть что можно передать сюда
+    def __init__(self, player, enemy):
+        self.player = player
+        self.enemy = enemy
+
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -31,13 +34,12 @@ class Player(object):
         self.luck = luck
         self.money = money
         self.bag = Bag
-
     def __str__(self):
-        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.tbag}
+        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag}
         return statistic.items()
 
 
-f = os.path.join("D:\Python", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
+f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
 # f = "Braslavskiy_Podzemelya-Chernogo-zamka.lU7lVg.178246.txt"
 q = open(f, 'r', encoding='utf-8')
 for s in range(70):
@@ -45,9 +47,13 @@ for s in range(70):
 q.close()
 score = 2
 slovo1 = "—", "(", "то", "на"
-
+slovo2= "Мастерство 1\nВыносливость" , "Мастерство 2\nВыносливость", "Мастерство 3\nВыносливость", "Мастерство 4\nВыносливость", \
+        "Мастерство 5\nВыносливость", "Мастерство 6\nВыносливость", "Мастерство 7\nВыносливость" "Мастерство 8\nВыносливость", "Мастерство 9\nВыносливость"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
+def cube():
+    dice = random.randint(1, 6)
+    return dice
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
     #    povtor.append(number)
@@ -102,11 +108,15 @@ def next_steps(r):
             position += 1
             if spt != None and spt not in steps and spt != "" and spt != "1":
                 steps.append(spt)
+        for battle in slovo2:
+            spt = findNum(r, battle, position)
+            if spt != None:
+                print("Бой обнаружен!")
     return steps
-
 
 a = Player()
 b = Bag
+c = Fight
 
 textGL = poisk(1)
 steps = next_steps(textGL)
