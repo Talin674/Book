@@ -52,7 +52,7 @@ slovo2= "Мастерство 1\nВыносливость" , "Мастерств
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
 def cube():
-    dice = random.randint(1, 6)
+    dice = random.randint(1, 12)
     return dice
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
