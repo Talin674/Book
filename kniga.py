@@ -39,8 +39,9 @@ class Player(object):
         return statistic.items()
 
 
-f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
-# f = "Braslavskiy_Podzemelya-Chernogo-zamka.lU7lVg.178246.txt"
+# f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
+f = "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt"
+
 q = open(f, 'r', encoding='utf-8')
 for s in range(70):
     print(q.readline())
@@ -48,12 +49,14 @@ q.close()
 score = 2
 slovo1 = "—", "(", "то", "на"
 slovo2= "Мастерство 1\nВыносливость" , "Мастерство 2\nВыносливость", "Мастерство 3\nВыносливость", "Мастерство 4\nВыносливость", \
-        "Мастерство 5\nВыносливость", "Мастерство 6\nВыносливость", "Мастерство 7\nВыносливость" "Мастерство 8\nВыносливость", "Мастерство 9\nВыносливость"
+        "Мастерство 5\nВыносливость", "Мастерство 6\nВыносливость", "Мастерство 7\nВыносливость", "Мастерство 8\nВыносливость", "Мастерство 9\nВыносливость"
+slovo3 = "Мастерство", "Выносливость"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
 def cube():
     dice = random.randint(1, 12)
     return dice
+
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
     #    povtor.append(number)
@@ -72,7 +75,6 @@ def poisk(number):
                 ret = ret + r
             return ret
 
-
 def findNum(r, s, position):
     x = 2
     position = r.find(s, position + 1)
@@ -82,6 +84,10 @@ def findNum(r, s, position):
     # print (position)
     if s == "(":
         x = 1
+    if s == "Мастерство":
+        x = 10
+    if s == "Выносливость":
+        x = 12
     position += x
     if r[position] == " ":
         position += 1
@@ -94,8 +100,20 @@ def findNum(r, s, position):
         position += 1
     return spt
 
+def fight_poisk(r):
+    while True:
+        for battle in slovo2:
+            spt = r.find(battle)
+            if spt != None:
+                #print("Бой обнаружен!")
+                return True
+
 def next_steps(r):
     steps = []
+    steps_enemy = []
+    steps_enemy2 = []
+    steps_enemy3 = []
+    steps_fight = []
     l = len(r)
     position = -1
     while l > position:
@@ -108,11 +126,24 @@ def next_steps(r):
             position += 1
             if spt != None and spt not in steps and spt != "" and spt != "1":
                 steps.append(spt)
-        for battle in slovo2:
-            spt = findNum(r, battle, position)
-            if spt != None:
-                print("Бой обнаружен!")
-    return steps
+            if fight_poisk(r):
+                for b in slovo3:
+                    spt = findNum(r, b, position)
+                    position += 1
+                    length = len(steps_fight)
+                    if spt != None and spt != "":
+                        steps_fight.append(spt)
+                        for m in steps_fight:
+                            if length == 2:
+                                for q in range(2):
+                                    steps_enemy.append(m)
+                            if length == 4:
+                                for n in range(2):
+                                    steps_enemy2.append(m)
+                            if length == 6:
+                                steps_enemy3.append(m)
+                            print(m)
+    return steps, steps_enemy, steps_enemy2, steps_enemy3
 
 a = Player()
 b = Bag
@@ -135,7 +166,7 @@ while True:
             print('У вас закончилось попытки')
     elif num == "статистика":
         print(a.__str__())
-    elif num.isdigit() and num in steps:
+    elif num.isdigit():
         number = int(num)
         textGL = poisk(number)
         steps = next_steps(textGL)
