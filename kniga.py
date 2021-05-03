@@ -141,6 +141,7 @@ def next_steps(r):
                                     steps_enemy2.append(m)
                             if length == 6:
                                 steps_enemy3.append(m)
+                            print(m)
     return steps, steps_enemy, steps_enemy2, steps_enemy3
 
 a = Player()
