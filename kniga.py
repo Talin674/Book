@@ -1,7 +1,6 @@
 import os
 import random
 
-#сделать функцию бросания кубика
 class Bag(object):
     def __init__(self, max_items=7):
         self.tbag = []
@@ -25,7 +24,6 @@ class Fight(object):
     def __init__(self, player, enemy):
         self.player = player
         self.enemy = enemy
-
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -48,9 +46,6 @@ for s in range(70):
 q.close()
 score = 2
 slovo1 = "—", "(", "то", "на"
-slovo2= "Мастерство 1\nВыносливость" , "Мастерство 2\nВыносливость", "Мастерство 3\nВыносливость", "Мастерство 4\nВыносливость", \
-        "Мастерство 5\nВыносливость", "Мастерство 6\nВыносливость", "Мастерство 7\nВыносливость", "Мастерство 8\nВыносливость", "Мастерство 9\nВыносливость"
-slovo3 = "Мастерство", "Выносливость"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
 def cube():
@@ -84,10 +79,6 @@ def findNum(r, s, position):
     # print (position)
     if s == "(":
         x = 1
-    if s == "Мастерство":
-        x = 10
-    if s == "Выносливость":
-        x = 12
     position += x
     if r[position] == " ":
         position += 1
@@ -100,20 +91,41 @@ def findNum(r, s, position):
         position += 1
     return spt
 
-def fight_poisk(r):
-    while True:
-        for battle in slovo2:
-            spt = r.find(battle)
-            if spt != None:
-                #print("Бой обнаружен!")
-                return True
+def enemy_append(name_enemy, lines2):
+    enemys = []
+    name_enemy2 = len(name_enemy)
+    n = 0
+    parametr = 1
+    parametr2 = 3
+    for i in range(name_enemy2):
+        enemys.append((name_enemy[n], lines2[parametr], lines2[parametr2]))
+        n += 1
+        parametr += 4
+        parametr2 += 4
+    return enemys
 
+
+def fight_poisk(r):
+    lines = []
+    lines2 = []
+    name_enemy = []
+    lines += r.split("\n")
+    l = len(lines)
+    a = 0
+    for i in range(l):
+        c = lines[a]
+        if c.startswith("Мастерство"):
+            c = lines[a + 1]
+            if c.startswith("Выносливость"):
+                m = lines[a]
+                z = lines[a + 1]
+                lines2 += m.split()
+                lines2 += z.split()
+                name_enemy.append(lines[a - 1])
+                enemy_append(name_enemy, lines2)
+        a += 1
 def next_steps(r):
     steps = []
-    steps_enemy = []
-    steps_enemy2 = []
-    steps_enemy3 = []
-    steps_fight = []
     l = len(r)
     position = -1
     while l > position:
@@ -126,24 +138,8 @@ def next_steps(r):
             position += 1
             if spt != None and spt not in steps and spt != "" and spt != "1":
                 steps.append(spt)
-            if fight_poisk(r):
-                for b in slovo3:
-                    spt = findNum(r, b, position)
-                    position += 1
-                    length = len(steps_fight)
-                    if spt != None and spt != "":
-                        steps_fight.append(spt)
-                        for m in steps_fight:
-                            if length == 2:
-                                for q in range(2):
-                                    steps_enemy.append(m)
-                            if length == 4:
-                                for n in range(2):
-                                    steps_enemy2.append(m)
-                            if length == 6:
-                                steps_enemy3.append(m)
-                            print(m)
-    return steps, steps_enemy, steps_enemy2, steps_enemy3
+            fight_poisk(r)
+    return steps
 
 a = Player()
 b = Bag
