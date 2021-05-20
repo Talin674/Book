@@ -20,10 +20,6 @@ class Bag(object):
             index_item += 1
         return ret
 
-class Fight(object):
-    def __init__(self, player, enemy):
-        self.player = player
-        self.enemy = enemy
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -35,8 +31,75 @@ class Player(object):
     def __str__(self):
         statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag}
         return statistic.items()
-
-
+class Fight(Player):
+    def fight_enemy(self):
+        for i in enemys:
+            print("НОВЫЙ ВРАГ")
+            statistic = []
+            m = 0
+            for b in i:
+                m += 1
+                if m != 1:
+                    statistic.append(b)
+            dd = int(i[2])
+            while dd > 0:
+                l = len(enemys)
+                if l > 1:
+                    x = 0
+                    for a in enemys:
+                        self.enemy = cube() + int(a[1])
+                        print("------БОЙ НАЧАЛСЯ------")
+                        print("\t(" + a[0] + ")")
+                        print("На кубиках выпало: ", self.enemy - int(a[1]))
+                        print("Его сила удара: ", self.enemy)
+                        self.player = cube() + self.skill
+                        print("\t\tВЫ")
+                        print("На кубиках выпало: ", self.player - self.skill)
+                        print("Ваша сила удара: ", self.player)
+                        if self.enemy > self.player:
+                            self.stamina -= 2
+                            print("Ваша удар оказался слабее! Вы потеряли 2 выносливости, у вас осталось", self.stamina)
+                        if self.player > self.enemy:
+                            print("Вы сильнее вашего врага!")
+                        if x == 0 and self.player > self.enemy:
+                            dd -= 2
+                            statistic.insert(1, dd)
+                            del statistic[2]
+                            print("DD", dd)
+                            print(i[0], "потерял 2 выносливости, теперь у него", statistic[1])
+                        elif self.stamina <= 0:
+                            self.stamina = 0
+                            print("Вы проиграли, у вас закончилась выносливость")
+                            return False
+                        if self.player == self.enemy:
+                            print("Ваши силы равны!")
+                        x += 1
+                self.enemy = cube() + int(i[1])
+                print("------БОЙ НАЧАЛСЯ------")
+                print("\t(" + i[0] + ")")
+                print("На кубиках выпало: ", self.enemy - int(i[1]))
+                print("Его сила удара: ", self.enemy)
+                self.player = cube() + self.skill
+                print("\t\tВЫ")
+                print("На кубиках выпало: ", self.player - self.skill)
+                print("Ваша сила удара: ", self.player)
+                if self.player > self.enemy:
+                    dd -= 2
+                    statistic.insert(1, dd)
+                    del statistic[2]
+                    print("DD", dd)
+                    print(i[0], "потерял 2 выносливости, теперь у него", statistic[1])
+                elif self.player < self.enemy:
+                    self.stamina -= 2
+                    print("Ваша удар оказался слабее! Вы потеряли 2 выносливости, у вас осталось", self.stamina)
+                elif self.stamina <= 0:
+                    self.stamina = 0
+                    return False
+                if self.player == self.enemy:
+                    print("Ваши силы равны!")
+            del enemys[0]
+        print("Ура! Все враги поверженны, вы одержали победу!")
+        return True
 # f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
 f = "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt"
 
@@ -94,9 +157,9 @@ def findNum(r, s, position):
 def enemy_append(name_enemy, lines2):
     enemys = []
     name_enemy2 = len(name_enemy)
-    n = 0
     parametr = 1
     parametr2 = 3
+    n = 0
     for i in range(name_enemy2):
         enemys.append((name_enemy[n], lines2[parametr], lines2[parametr2]))
         n += 1
@@ -104,14 +167,15 @@ def enemy_append(name_enemy, lines2):
         parametr2 += 4
     return enemys
 
-
 def fight_poisk(r):
+    global enemys
     lines = []
     lines2 = []
     name_enemy = []
     lines += r.split("\n")
     l = len(lines)
     a = 0
+    enemys = None
     for i in range(l):
         c = lines[a]
         if c.startswith("Мастерство"):
@@ -122,8 +186,9 @@ def fight_poisk(r):
                 lines2 += m.split()
                 lines2 += z.split()
                 name_enemy.append(lines[a - 1])
-                enemy_append(name_enemy, lines2)
+                enemys = enemy_append(name_enemy, lines2)
         a += 1
+    return enemys
 def next_steps(r):
     steps = []
     l = len(r)
@@ -138,13 +203,11 @@ def next_steps(r):
             position += 1
             if spt != None and spt not in steps and spt != "" and spt != "1":
                 steps.append(spt)
-            fight_poisk(r)
     return steps
 
 a = Player()
-b = Bag
-c = Fight
-
+b = Bag()
+c = Fight()
 textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
@@ -166,7 +229,16 @@ while True:
         number = int(num)
         textGL = poisk(number)
         steps = next_steps(textGL)
+        enemys = fight_poisk(textGL)
         print(textGL)
+        if enemys != None:
+            print("Начался бой!")
+            print(c.fight_enemy())
+            if c.fight_enemy() == True:
+                print("Ваши характеристики", a.__str__())
+            else:
+                print("Вы проиграли!")
+                break
         if steps == []:
             print("Игра закончена")
             break
