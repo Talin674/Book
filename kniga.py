@@ -19,7 +19,14 @@ class Bag(object):
             ret = ret + str(index_item) + "\t" + i
             index_item += 1
         return ret
-
+class Notes(object):
+    def __init__(self):
+        self.notes = []
+    def record(self, rec):
+        del rec[0]
+        self.notes.append(rec)
+    def delete(self, index_rec):
+        del self.notes[index_rec]
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -28,9 +35,18 @@ class Player(object):
         self.luck = luck
         self.money = money
         self.bag = Bag
+        self.notes = Notes
     def __str__(self):
-        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag}
+        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag, "Заметки":self.notes().notes}
         return statistic.items()
+class Lacky(Player):
+    def lacky(self):
+        lack = cube()
+        if lack <= self.luck:
+            print(lack, "lack")
+            return True
+        else:
+            return False
 class Fight(Player):
     def fight_enemy(self):
         for i in enemys:
@@ -53,6 +69,8 @@ class Fight(Player):
                         print("На кубиках выпало: ", self.enemy - int(a[1]))
                         print("Его сила удара: ", self.enemy)
                         self.player = cube() + self.skill
+                        if num == "54":
+                            self.player = self.player - 1
                         print("\t\tВЫ")
                         print("На кубиках выпало: ", self.player - self.skill)
                         print("Ваша сила удара: ", self.player)
@@ -80,6 +98,8 @@ class Fight(Player):
                 print("На кубиках выпало: ", self.enemy - int(i[1]))
                 print("Его сила удара: ", self.enemy)
                 self.player = cube() + self.skill
+                if num == "54":
+                    self.player -= 1
                 print("\t\tВЫ")
                 print("На кубиках выпало: ", self.player - self.skill)
                 print("Ваша сила удара: ", self.player)
@@ -114,6 +134,20 @@ spisok = "уменьшить на ", "надо на ", "уменьшите на 
 def cube():
     dice = random.randint(1, 12)
     return dice
+def poisk_luck(r):
+    luck = r.find("ПРОВЕРЬТЕ СВОЮ УДАЧУ")
+    if luck == -1:
+        return None
+    else:
+        return True
+d = Lacky()
+def lack(r):
+    if poisk_luck(r):
+        if d.lacky():
+            return True
+        return False
+    else:
+        return False
 
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
@@ -208,6 +242,7 @@ def next_steps(r):
 a = Player()
 b = Bag()
 c = Fight()
+n = Notes
 textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
@@ -223,6 +258,8 @@ while True:
             a.stamina += 2
         else:
             print('У вас закончилось попытки')
+    elif num.startswith("записать"):
+        print(n.record(num))
     elif num == "статистика":
         print(a.__str__())
     elif num.isdigit():
@@ -231,7 +268,13 @@ while True:
         steps = next_steps(textGL)
         enemys = fight_poisk(textGL)
         print(textGL)
-        if enemys != None:
+        lacky = lack(textGL)
+        if lacky:
+            print("Вы удачливы!")
+        if num == "54" and lacky:
+            print("Вам повезло! Вы не будете с ним сржаться")
+            num = "558"
+        elif enemys != None:
             print("Начался бой!")
             print(c.fight_enemy())
             if c.fight_enemy() == True:
