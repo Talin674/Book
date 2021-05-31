@@ -6,7 +6,7 @@ class Bag(object):
         self.tbag = []
         self.max_items = max_items
     def add(self, item):
-        if len(self.tbag) > self.max_items:
+        if len(self.tbag) < self.max_items:
             self.tbag.append(item)
         else:
             print('Больше нет места!')
