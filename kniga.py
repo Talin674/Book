@@ -23,7 +23,6 @@ class Notes(object):
     def __init__(self):
         self.notes = []
     def record(self, rec):
-        del rec[0]
         self.notes.append(rec)
     def delete(self, index_rec):
         del self.notes[index_rec]
@@ -41,7 +40,7 @@ class Player(object):
         return statistic.items()
 class Lacky(Player):
     def lacky(self):
-        lack = cube()
+        lack = cube() + cube()
         if lack <= self.luck:
             print(lack, "lack")
             return True
@@ -63,12 +62,12 @@ class Fight(Player):
                 if l > 1:
                     x = 0
                     for a in enemys:
-                        self.enemy = cube() + int(a[1])
+                        self.enemy = cube() + cube() + int(a[1])
                         print("------БОЙ НАЧАЛСЯ------")
                         print("\t(" + a[0] + ")")
                         print("На кубиках выпало: ", self.enemy - int(a[1]))
                         print("Его сила удара: ", self.enemy)
-                        self.player = cube() + self.skill
+                        self.player = cube() + cube() + self.skill
                         if num == "54":
                             self.player = self.player - 1
                         print("\t\tВЫ")
@@ -92,12 +91,12 @@ class Fight(Player):
                         if self.player == self.enemy:
                             print("Ваши силы равны!")
                         x += 1
-                self.enemy = cube() + int(i[1])
+                self.enemy = cube() + cube() + int(i[1])
                 print("------БОЙ НАЧАЛСЯ------")
                 print("\t(" + i[0] + ")")
                 print("На кубиках выпало: ", self.enemy - int(i[1]))
                 print("Его сила удара: ", self.enemy)
-                self.player = cube() + self.skill
+                self.player = cube() + cube() + self.skill
                 if num == "54":
                     self.player -= 1
                 print("\t\tВЫ")
@@ -132,7 +131,7 @@ slovo1 = "—", "(", "то", "на"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
 def cube():
-    dice = random.randint(1, 12) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
+    dice = random.randint(1, 6) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
     return dice
 def poisk_luck(r):
     luck = r.find("ПРОВЕРЬТЕ СВОЮ УДАЧУ")
