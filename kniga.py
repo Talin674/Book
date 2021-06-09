@@ -22,10 +22,6 @@ class Bag(object):
 class Notes(object):
     def __init__(self):
         self.notes = []
-    def record(self, rec):
-        self.notes.append(rec)
-    def delete(self, index_rec):
-        del self.notes[index_rec]
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -33,11 +29,22 @@ class Player(object):
         self.stamina = stamina
         self.luck = luck
         self.money = money
-        self.bag = Bag
-        self.notes = Notes
+        self.bag = Bag()
+        self.notes = Notes()
     def __str__(self):
-        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag, "Заметки":self.notes().notes}
+        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money}
         return statistic.items()
+
+    def record(self, rec):
+        #УБРАТЬ СЛОВО "ЗАПИСЬ"
+        self.notes.notes.append(rec)
+
+    def delete_notes(self, index_rec):
+        del self.notes.notes[index_rec]
+
+    def print_notes(self):
+        print(self.notes.notes)
+
 class Lacky(Player):
     def lacky(self):
         lack = cube() + cube()
@@ -238,10 +245,12 @@ def next_steps(r):
                 steps.append(spt)
     return steps
 
-a = Player()
 b = Bag()
+n = Notes()
+a = Player()
+
 c = Fight()
-n = Notes
+
 textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
@@ -257,8 +266,18 @@ while True:
             a.stamina += 2
         else:
             print('У вас закончилось попытки')
+    elif num.startswith("удалить заметку"):
+        del_notes = int(input("Введите номер заметки которую хотите удалить: "))
+        a.delete_notes(del_notes)
+        print(a.print_notes())
+        print("Заметка успешно удалена!")
     elif num.startswith("записать"):
-        print(n.record(num))
+        num = num.split(" ", 1)[1]
+        a.record(num)
+        print(a.print_notes())
+        print("Заметка успешно дабавленна!")
+    elif num.startswith("заметки"):
+        print(a.print_notes())
     elif num == "статистика":
         print(a.__str__())
     elif num.isdigit():
