@@ -245,6 +245,12 @@ def next_steps(r):
                 steps.append(spt)
     return steps
 
+def ask_yes_no(question):
+    response = None
+    while response not in("yes", "no"):
+        response = input(question).lower()
+    return response
+
 b = Bag()
 n = Notes()
 a = Player()
@@ -255,10 +261,17 @@ textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
 print(steps)
+yes_no = None
 while True:
     print('Чтобы открыть инвентарь - напишите "инвентарь". Если хотите выпить из фляги - напишите "фляга"')
     print('Чтобы посмотреть статистику вашего персонажа введите - "статистика"')
     num = input('Введите число из представленных в главе: ')
+    print(num)
+    if num == "47" and yes_no == "yes":
+        textGL = poisk(187)
+        steps = next_steps(textGL)
+        print(textGL)
+        input("Нажмите Enter для перехода на 47 главу")
     if num == "фляга":
         if score > 0:
             score -= 1
@@ -286,6 +299,16 @@ while True:
         steps = next_steps(textGL)
         enemys = fight_poisk(textGL)
         print(textGL)
+        if num == "11":
+            yes_no = ask_yes_no("Вы поверили разбойнику? (yes или no): ")
+            if num == "yes":
+                a.record("+ 140 в номеру параграфа")
+                print("Вы решили доверится разбойнику! У вас появилась новая заметка")
+                print(a.print_notes())
+            elif num == "no":
+                print("Вы не прислушались к совету разбойника!")
+            else:
+                print('Нужно ввести "yes" либо "no"')
         lacky = lack(textGL)
         if lacky:
             print("Вы удачливы!")
