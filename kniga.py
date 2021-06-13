@@ -6,7 +6,7 @@ class Bag(object):
         self.tbag = []
         self.max_items = max_items
     def add(self, item):
-        if len(self.tbag) > self.max_items:
+        if len(self.tbag) < self.max_items:
             self.tbag.append(item)
         else:
             print('Больше нет места!')
@@ -19,7 +19,9 @@ class Bag(object):
             ret = ret + str(index_item) + "\t" + i
             index_item += 1
         return ret
-
+class Notes(object):
+    def __init__(self):
+        self.notes = []
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -27,10 +29,30 @@ class Player(object):
         self.stamina = stamina
         self.luck = luck
         self.money = money
-        self.bag = Bag
+        self.bag = Bag()
+        self.notes = Notes()
     def __str__(self):
-        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money, "Инвентарь=":self.bag().tbag}
+        statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money}
         return statistic.items()
+
+    def record(self, rec):
+        #УБРАТЬ СЛОВО "ЗАПИСЬ"
+        self.notes.notes.append(rec)
+
+    def delete_notes(self, index_rec):
+        del self.notes.notes[index_rec]
+
+    def print_notes(self):
+        print(self.notes.notes)
+
+class Lacky(Player):
+    def lacky(self):
+        lack = cube() + cube()
+        if lack <= self.luck:
+            print(lack, "lack")
+            return True
+        else:
+            return False
 class Fight(Player):
     def fight_enemy(self):
         for i in enemys:
@@ -47,12 +69,14 @@ class Fight(Player):
                 if l > 1:
                     x = 0
                     for a in enemys:
-                        self.enemy = cube() + int(a[1])
+                        self.enemy = cube() + cube() + int(a[1])
                         print("------БОЙ НАЧАЛСЯ------")
                         print("\t(" + a[0] + ")")
                         print("На кубиках выпало: ", self.enemy - int(a[1]))
                         print("Его сила удара: ", self.enemy)
-                        self.player = cube() + self.skill
+                        self.player = cube() + cube() + self.skill
+                        if num == "54":
+                            self.player = self.player - 1
                         print("\t\tВЫ")
                         print("На кубиках выпало: ", self.player - self.skill)
                         print("Ваша сила удара: ", self.player)
@@ -74,12 +98,14 @@ class Fight(Player):
                         if self.player == self.enemy:
                             print("Ваши силы равны!")
                         x += 1
-                self.enemy = cube() + int(i[1])
+                self.enemy = cube() + cube() + int(i[1])
                 print("------БОЙ НАЧАЛСЯ------")
                 print("\t(" + i[0] + ")")
                 print("На кубиках выпало: ", self.enemy - int(i[1]))
                 print("Его сила удара: ", self.enemy)
-                self.player = cube() + self.skill
+                self.player = cube() + cube() + self.skill
+                if num == "54":
+                    self.player -= 1
                 print("\t\tВЫ")
                 print("На кубиках выпало: ", self.player - self.skill)
                 print("Ваша сила удара: ", self.player)
@@ -112,8 +138,22 @@ slovo1 = "—", "(", "то", "на"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
 def cube():
-    dice = random.randint(1, 12) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
+    dice = random.randint(1, 6) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
     return dice
+def poisk_luck(r):
+    luck = r.find("ПРОВЕРЬТЕ СВОЮ УДАЧУ")
+    if luck == -1:
+        return None
+    else:
+        return True
+d = Lacky()
+def lack(r):
+    if poisk_luck(r):
+        if d.lacky():
+            return True
+        return False
+    else:
+        return False
 
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
@@ -205,17 +245,34 @@ def next_steps(r):
                 steps.append(spt)
     return steps
 
-a = Player()
+def ask_yes_no(question):
+    response = None
+    while response not in("yes", "no"):
+        response = input(question).lower()
+    return response
+
 b = Bag()
+n = Notes()
+a = Player()
+
 c = Fight()
+
 textGL = poisk(1)
 steps = next_steps(textGL)
 print(textGL)
 print(steps)
+yes_no = None
 while True:
     print('Чтобы открыть инвентарь - напишите "инвентарь". Если хотите выпить из фляги - напишите "фляга"')
     print('Чтобы посмотреть статистику вашего персонажа введите - "статистика"')
     num = input('Введите число из представленных в главе: ')
+    print(num)
+    # так не годится - что опять за прибивание глав?
+    if num == "47" and yes_no == "yes":
+        textGL = poisk(187)
+        steps = next_steps(textGL)
+        print(textGL)
+        input("Нажмите Enter для перехода на 47 главу")
     if num == "фляга":
         if score > 0:
             score -= 1
@@ -223,6 +280,18 @@ while True:
             a.stamina += 2
         else:
             print('У вас закончилось попытки')
+    elif num.startswith("удалить заметку"):
+        del_notes = int(input("Введите номер заметки которую хотите удалить: "))
+        a.delete_notes(del_notes)
+        print(a.print_notes())
+        print("Заметка успешно удалена!")
+    elif num.startswith("записать"):
+        num = num.split(" ", 1)[1]
+        a.record(num)
+        print(a.print_notes())
+        print("Заметка успешно дабавленна!")
+    elif num.startswith("заметки"):
+        print(a.print_notes())
     elif num == "статистика":
         print(a.__str__())
     elif num.isdigit():
@@ -231,7 +300,23 @@ while True:
         steps = next_steps(textGL)
         enemys = fight_poisk(textGL)
         print(textGL)
-        if enemys != None:
+        if num == "11":
+            yes_no = ask_yes_no("Вы поверили разбойнику? (yes или no): ")
+            if num == "yes":
+                a.record("+ 140 в номеру параграфа")
+                print("Вы решили доверится разбойнику! У вас появилась новая заметка")
+                print(a.print_notes())
+            elif num == "no":
+                print("Вы не прислушались к совету разбойника!")
+            else:
+                print('Нужно ввести "yes" либо "no"')
+        lacky = lack(textGL)
+        if lacky:
+            print("Вы удачливы!")
+        if num == "54" and lacky:
+            print("Вам повезло! Вы не будете с ним сржаться")
+            num = "558"
+        elif enemys != None:
             print("Начался бой!")
             print(c.fight_enemy())
             if c.fight_enemy() == True:
