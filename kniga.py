@@ -391,9 +391,8 @@ while True:
         enemys = fight_poisk(textGL)
         print(textGL)
         print(steps)
-        spt = add_steps(textGL)
         if poisk_box != None:
-            add_steps(spt)
+            add_steps(textGL)
         fight_treee = fight_tree(textGL, steps, enemys)
         if fight_treee == False:
             break
