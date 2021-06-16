@@ -5,13 +5,16 @@ class Bag(object):
     def __init__(self, max_items=7):
         self.tbag = []
         self.max_items = max_items
+
     def add(self, item):
         if len(self.tbag) < self.max_items:
             self.tbag.append(item)
         else:
             print('Больше нет места!')
+
     def delete(self, index_item):
         del self.tbag[index_item]
+
     def show(self):
         ret = ""
         index_item = 0
@@ -19,9 +22,13 @@ class Bag(object):
             ret = ret + str(index_item) + "\t" + i
             index_item += 1
         return ret
+    def print_bag(self):
+        print(self.tbag)
+
 class Notes(object):
     def __init__(self):
         self.notes = []
+
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -31,12 +38,12 @@ class Player(object):
         self.money = money
         self.bag = Bag()
         self.notes = Notes()
+
     def __str__(self):
         statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money}
         return statistic.items()
 
     def record(self, rec):
-        #УБРАТЬ СЛОВО "ЗАПИСЬ"
         self.notes.notes.append(rec)
 
     def delete_notes(self, index_rec):
@@ -75,7 +82,7 @@ class Fight(Player):
                         print("На кубиках выпало: ", self.enemy - int(a[1]))
                         print("Его сила удара: ", self.enemy)
                         self.player = cube() + cube() + self.skill
-                        if num == "54":
+                        if textGL.find("паук затягивает вас на дерево"):
                             self.player = self.player - 1
                         print("\t\tВЫ")
                         print("На кубиках выпало: ", self.player - self.skill)
@@ -104,7 +111,7 @@ class Fight(Player):
                 print("На кубиках выпало: ", self.enemy - int(i[1]))
                 print("Его сила удара: ", self.enemy)
                 self.player = cube() + cube() + self.skill
-                if num == "54":
+                if textGL.find("паук затягивает вас на дерево"):
                     self.player -= 1
                 print("\t\tВЫ")
                 print("На кубиках выпало: ", self.player - self.skill)
@@ -126,6 +133,8 @@ class Fight(Player):
             del enemys[0]
         print("Ура! Все враги поверженны, вы одержали победу!")
         return True
+
+
 # f = os.path.join("D:\Python/Book", "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt")
 f = "Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt"
 
@@ -140,6 +149,7 @@ spisok = "уменьшить на ", "надо на ", "уменьшите на 
 def cube():
     dice = random.randint(1, 6) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
     return dice
+
 def poisk_luck(r):
     luck = r.find("ПРОВЕРЬТЕ СВОЮ УДАЧУ")
     if luck == -1:
@@ -229,6 +239,7 @@ def fight_poisk(r):
                 enemys = enemy_append(name_enemy, lines2)
         a += 1
     return enemys
+
 def next_steps(r):
     steps = []
     l = len(r)
@@ -244,6 +255,81 @@ def next_steps(r):
             if spt != None and spt not in steps and spt != "" and spt != "1":
                 steps.append(spt)
     return steps
+
+def fight_tree(r, steps, enemys):
+    position = r.find("паук затягивает вас на дерево")
+    if position == -1:
+        return None
+    else:
+        lacky = lack(r)
+        if lacky:
+            print("Вам повезло, вы не будете сражаться с монстром! Идите на", steps[1], "главу")
+            num = steps[1]
+            return num
+        else:
+            if enemys != None:
+                print("Бой начался!")
+                print(c.fight_enemy())
+                if c.fight_enemy():
+                    print("Ваши характеристики", a.__str__())
+                    num = steps[2]
+                    return num
+                else:
+                    print("Вы проиграли!")
+                    return False
+
+def poisk_box(textGL ,x):
+    position = textGL.find(x)
+    if textGL == -1:
+        return None
+    if textGL[position] == " ":
+        position += 1
+    if x == "Внутри ларца лежат":
+        position += 19
+    spt = ""
+    position += 1
+    while True:
+        spt += textGL[position]
+        print("spt:", spt)
+        position += 1
+        print(position)
+        if position == "," or " и " or ".":
+            return spt
+
+def add_steps(textGL):
+    steps_box = []
+    x = "Внутри ларца лежат"
+    while True:
+        spt = poisk_box(textGL, x)
+        steps_box.append(spt)
+        x = steps_box[-1]
+        print("steps_box:", steps_box)
+        if len(steps_box) == 3:
+            return steps_box
+
+def poisk_two_tree():
+    yes_no = ask_yes_no("Вы поверили разбойнику? (yes или no): ")
+    if yes_no == "yes":
+        a.record("Вы поверили разбойнику")
+        print('Вы решили доверится разбойнику! Если увидите две березы на холме, напишите "2 берёзы". У вас появилась новая заметка')
+        print(a.print_notes())
+        return True
+    else:
+        print("Вы не прислушались к совету разбойника!")
+        return False
+
+def poisk_trove():
+    integer = 1
+    while True:
+        textGL = poisk(integer)
+        steps = textGL.find("поднимаетесь на холм к двум березам")
+        if steps != -1:
+            textGL = poisk(integer)
+            steps = next_steps(textGL)
+            print(textGL)
+            print(steps)
+            input("Нажмите Enter для перехода на 47 главу")
+        integer += 1
 
 def ask_yes_no(question):
     response = None
@@ -262,17 +348,19 @@ steps = next_steps(textGL)
 print(textGL)
 print(steps)
 yes_no = None
+fight_treee = None
+lines = None
+poisk_two_treee = None
+steps_box = []
+x = "Внутри ларца лежат"
 while True:
     print('Чтобы открыть инвентарь - напишите "инвентарь". Если хотите выпить из фляги - напишите "фляга"')
     print('Чтобы посмотреть статистику вашего персонажа введите - "статистика"')
     num = input('Введите число из представленных в главе: ')
+    if fight_treee != None:
+        num = fight_treee
+        fight_treee = None
     print(num)
-    # так не годится - что опять за прибивание глав?
-    if num == "47" and yes_no == "yes":
-        textGL = poisk(187)
-        steps = next_steps(textGL)
-        print(textGL)
-        input("Нажмите Enter для перехода на 47 главу")
     if num == "фляга":
         if score > 0:
             score -= 1
@@ -280,6 +368,8 @@ while True:
             a.stamina += 2
         else:
             print('У вас закончилось попытки')
+    if num == "состояние фляги":
+        print("У вас осталось", score, "попыток")
     elif num.startswith("удалить заметку"):
         del_notes = int(input("Введите номер заметки которую хотите удалить: "))
         a.delete_notes(del_notes)
@@ -300,33 +390,20 @@ while True:
         steps = next_steps(textGL)
         enemys = fight_poisk(textGL)
         print(textGL)
-        if num == "11":
-            yes_no = ask_yes_no("Вы поверили разбойнику? (yes или no): ")
-            if num == "yes":
-                a.record("+ 140 в номеру параграфа")
-                print("Вы решили доверится разбойнику! У вас появилась новая заметка")
-                print(a.print_notes())
-            elif num == "no":
-                print("Вы не прислушались к совету разбойника!")
-            else:
-                print('Нужно ввести "yes" либо "no"')
-        lacky = lack(textGL)
-        if lacky:
-            print("Вы удачливы!")
-        if num == "54" and lacky:
-            print("Вам повезло! Вы не будете с ним сржаться")
-            num = "558"
-        elif enemys != None:
-            print("Начался бой!")
-            print(c.fight_enemy())
-            if c.fight_enemy() == True:
-                print("Ваши характеристики", a.__str__())
-            else:
-                print("Вы проиграли!")
-                break
+        print(steps)
+        spt = add_steps(textGL)
+        if poisk_box != None:
+            add_steps(spt)
+        fight_treee = fight_tree(textGL, steps, enemys)
+        if fight_treee == False:
+            break
         if steps == []:
             print("Игра закончена")
             break
-        print(steps)
+        if textGL.find("когда увидишь две березы") != -1:
+            poisk_two_treee = poisk_two_tree()
+            score -= 2
+    elif num == "2 берёзы" and textGL.find("на холме рядом с дорогой стоят две невысокие березки") != -1 and poisk_two_treee == True:
+        poisk_trove()
     else:
         print('Такого числа нет')
