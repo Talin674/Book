@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1f955811-6ce6-4e74-a998-dbc53f3c3c55" name="Default Changelist" comment="замечание по кубику">
+    <list default="true" id="1f955811-6ce6-4e74-a998-dbc53f3c3c55" name="Default Changelist" comment="comment">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_06_2021__19_49__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_09_06_2021__19_49__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Braslavskiy_Podzemelya-Chernogo-zamka_lU7lVg_178246.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kniga.py" beforeDir="false" afterPath="$PROJECT_DIR$/kniga.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,6 +22,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="ProjectId" id="1rtTW24LTXp1oXHtgMxGq50YMS8" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -40,7 +44,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$PROJECT_DIR$/../pythonProject/venv/bin/python" />
+      <option name="SDK_HOME" value="D:\Python\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -103,6 +107,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="у тебя программа и файл лежат в одном месте.&#10;в таком случае не надо использовать абсолютные пути&#10;(вообще абсолютные пути и значения в программах - это моветон)" />
     <MESSAGE value="замечание по кубику" />
-    <option name="LAST_COMMIT_MESSAGE" value="замечание по кубику" />
+    <MESSAGE value="comment" />
+    <option name="LAST_COMMIT_MESSAGE" value="comment" />
   </component>
 </project>

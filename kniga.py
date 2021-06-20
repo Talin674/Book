@@ -1,17 +1,18 @@
 import os
 import random
-
+# интвентарь
 class Bag(object):
     def __init__(self, max_items=7):
         self.tbag = []
         self.max_items = max_items
-
+    # добавление в инвентарь
     def add(self, item):
         if len(self.tbag) < self.max_items:
             self.tbag.append(item)
         else:
             print('Больше нет места!')
 
+    # удаление из инвенторя
     def delete(self, index_item):
         del self.tbag[index_item]
 
@@ -24,11 +25,11 @@ class Bag(object):
         return ret
     def print_bag(self):
         print(self.tbag)
-
+# заметки
 class Notes(object):
     def __init__(self):
         self.notes = []
-
+# игрок
 class Player(object):
     def __init__(self, skill=random.randint(1, 6) + 6, stamina=random.randint(1, 12) + 12,
                  luck=random.randint(1, 6) + 6, money=15):
@@ -39,19 +40,31 @@ class Player(object):
         self.bag = Bag()
         self.notes = Notes()
 
+    # выводин на экран инвентарь игрока
     def __str__(self):
         statistic = {"Мастерство=":self.skill, "Выносливость=":self.stamina, "Удача=":self.luck, "Деньги=":self.money}
         return statistic.items()
 
+    # запись в заметки
     def record(self, rec):
         self.notes.notes.append(rec)
 
+    # удаление записи из заметок
     def delete_notes(self, index_rec):
         del self.notes.notes[index_rec]
 
+    # вывод на экран заметок
     def print_notes(self):
         print(self.notes.notes)
+    @property
+    def add_money(self):
+        return self.money
+    @add_money.setter
+    # добавление денег
+    def add_money(self, money):
+        self.money += money
 
+# проверка удачи
 class Lacky(Player):
     def lacky(self):
         lack = cube() + cube()
@@ -60,7 +73,52 @@ class Lacky(Player):
             return True
         else:
             return False
+
+# бой
 class Fight(Player):
+    # поиск характерисик
+    def poisk_harakteristik(self, spisok, spisok_korney, parametr, spisok_pervih_slov_dobavlenie):
+        # передаём spisok - в нём находятся фразы "Потеряйте 1 МАСТЕРСТВО и 3 ВЫНОСЛИВОСТИ", "прибавлять 1 к СИЛЕ своего УДАРА"
+        # spisok_korney - список корней "УДАЧ", "МАСТЕРСТВ"
+        # parametr - число которое нужно прибавить, либо отнять
+        # spisok_pervih_slov_dobavlenie - в этом списке будут слова, которые идут в начале, и будут говорить программе, какую опирацию нужно сделать (прибавить или отнять)
+
+        # harakteristics - содержит фразы из spisok
+        # statistic - ищёт фразу в главе
+        # korni - содержит корни из spisok_korney
+
+        # этот цикл ищет фразы из spisok в главе
+        for harakteristics in spisok:
+            statistic = textGL.find(harakteristics)
+            if statistic == -1:
+                return None
+            else:
+                # если фраза находится, перебираются все возможные корни для определения, с какой характеристикой персонажа взаимодействовать
+                for korni in spisok_korney:
+                    harakteristics = str(harakteristics)
+                    statistic = harakteristics.find(korni)
+                    if statistic != -1:
+                        # если первое слово фразы "Дабавьте", "Восстановить", то будет сложение, иначе - вычитание
+                        for spiski in spisok_pervih_slov_dobavlenie:
+                            if harakteristics.startswith(spiski):
+                                if korni == "УДАЧ":
+                                    self.luck += parametr
+                                if korni == "МАСТЕРСТВ":
+                                    self.skill += parametr
+                                if korni == "ВЫНОСЛИВО":
+                                    self.stamina += parametr
+                                if korni == "УДАР":
+                                    self.player += 1
+                            else:
+                                if korni == "УДАЧ":
+                                    self.luck -= parametr
+                                if korni == "МАСТЕРСТВ":
+                                    self.skill -= parametr
+                                if korni == "ВЫНОСЛИВО":
+                                    self.stamina -= parametr
+                                if korni == "УДАР":
+                                    self.player -= parametr
+
     def fight_enemy(self):
         for i in enemys:
             print("НОВЫЙ ВРАГ")
@@ -146,17 +204,21 @@ score = 2
 slovo1 = "—", "(", "то", "на"
 spisok = "уменьшить на ", "надо на ", "уменьшите на ", "увеличив на ", "уменьшив на ", "увеличьте на "
 
+# бросание кубика
 def cube():
     dice = random.randint(1, 6) #не верно. кубик у нас 6 гранный и иногда надо кидать все таки 1 кубик, а не два
     return dice
 
+# поиск проверки удачи
 def poisk_luck(r):
     luck = r.find("ПРОВЕРЬТЕ СВОЮ УДАЧУ")
     if luck == -1:
         return None
     else:
         return True
+
 d = Lacky()
+# провека на удачу
 def lack(r):
     if poisk_luck(r):
         if d.lacky():
@@ -165,6 +227,7 @@ def lack(r):
     else:
         return False
 
+# поиск главы
 def poisk(number):
     q = open(f, 'r', encoding='utf-8')
     #    povtor.append(number)
@@ -183,6 +246,7 @@ def poisk(number):
                 ret = ret + r
             return ret
 
+# поиск глав на которые нужно перейти в главе
 def findNum(r, s, position):
     x = 2
     position = r.find(s, position + 1)
@@ -204,6 +268,7 @@ def findNum(r, s, position):
         position += 1
     return spt
 
+# характеристики врагов добавляются в список
 def enemy_append(name_enemy, lines2):
     enemys = []
     name_enemy2 = len(name_enemy)
@@ -217,6 +282,7 @@ def enemy_append(name_enemy, lines2):
         parametr2 += 4
     return enemys
 
+# находятся характеристики врагов
 def fight_poisk(r):
     global enemys
     lines = []
@@ -240,6 +306,7 @@ def fight_poisk(r):
         a += 1
     return enemys
 
+# добавляются в список steps найденный главы
 def next_steps(r):
     steps = []
     l = len(r)
@@ -256,6 +323,7 @@ def next_steps(r):
                 steps.append(spt)
     return steps
 
+# поиск боя с пауком на дереве
 def fight_tree(r, steps, enemys):
     position = r.find("паук затягивает вас на дерево")
     if position == -1:
@@ -278,6 +346,7 @@ def fight_tree(r, steps, enemys):
                     print("Вы проиграли!")
                     return False
 
+#
 def poisk_box(textGL ,x):
     position = textGL.find(x)
     if textGL == -1:
@@ -307,6 +376,7 @@ def add_steps(textGL):
         if len(steps_box) == 3:
             return steps_box
 
+# разговор с умирающим разбойником
 def poisk_two_tree():
     yes_no = ask_yes_no("Вы поверили разбойнику? (yes или no): ")
     if yes_no == "yes":
@@ -318,6 +388,7 @@ def poisk_two_tree():
         print("Вы не прислушались к совету разбойника!")
         return False
 
+# поиск сокровища
 def poisk_trove():
     integer = 1
     while True:
@@ -331,6 +402,9 @@ def poisk_trove():
             input("Нажмите Enter для перехода на 47 главу")
         integer += 1
 
+
+
+# да или нет
 def ask_yes_no(question):
     response = None
     while response not in("yes", "no"):
@@ -357,10 +431,12 @@ while True:
     print('Чтобы открыть инвентарь - напишите "инвентарь". Если хотите выпить из фляги - напишите "фляга"')
     print('Чтобы посмотреть статистику вашего персонажа введите - "статистика"')
     num = input('Введите число из представленных в главе: ')
+    # бой на дереве
     if fight_treee != None:
         num = fight_treee
         fight_treee = None
     print(num)
+    # использование фляги
     if num == "фляга":
         if score > 0:
             score -= 1
@@ -368,22 +444,28 @@ while True:
             a.stamina += 2
         else:
             print('У вас закончилось попытки')
+    # сколько осталось использований у фляги
     if num == "состояние фляги":
         print("У вас осталось", score, "попыток")
+    # удаление заметки
     elif num.startswith("удалить заметку"):
         del_notes = int(input("Введите номер заметки которую хотите удалить: "))
         a.delete_notes(del_notes)
         print(a.print_notes())
         print("Заметка успешно удалена!")
+    # запись в заметки
     elif num.startswith("записать"):
         num = num.split(" ", 1)[1]
         a.record(num)
         print(a.print_notes())
         print("Заметка успешно дабавленна!")
+    # вывод на экран всех заметок
     elif num.startswith("заметки"):
         print(a.print_notes())
+    # вся статистика игрока
     elif num == "статистика":
         print(a.__str__())
+    # поиск главы и вовод её на экран
     elif num.isdigit():
         number = int(num)
         textGL = poisk(number)
@@ -391,17 +473,22 @@ while True:
         enemys = fight_poisk(textGL)
         print(textGL)
         print(steps)
+        # ларец
         if poisk_box != None:
             add_steps(textGL)
+        # битва на дереве
         fight_treee = fight_tree(textGL, steps, enemys)
         if fight_treee == False:
             break
+        # если игрок погибает
         if steps == []:
             print("Игра закончена")
             break
+        # разговор с умирающим разбойником
         if textGL.find("когда увидишь две березы") != -1:
             poisk_two_treee = poisk_two_tree()
             score -= 2
+    # нахождение клада около двух берёз
     elif num == "2 берёзы" and textGL.find("на холме рядом с дорогой стоят две невысокие березки") != -1 and poisk_two_treee == True:
         poisk_trove()
     else:
